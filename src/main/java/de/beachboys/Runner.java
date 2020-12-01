@@ -17,12 +17,12 @@ import static java.util.stream.Collectors.toList;
 
 public class Runner {
 
-    private static int CURRENT_YEAR = 2019;
-    private static int CURRENT_DAY = 9;
+    private static int CURRENT_YEAR = 2020;
+    private static int CURRENT_DAY = 2;
     private static int CURRENT_PART = 1;
     // use the session id from your browser session (long hex string)
-    private static String BROWSER_SESSION = "secret";
-    private static final String DATA_FOLDER = "c:/temp/";
+    private static String BROWSER_SESSION = "53616c7465645f5f26c9cd0c2600dc7a24b1e4497065a8e0eee1a575579807bf064adcdc67b39f29c60d0e82965269ce";
+    private static final String DATA_FOLDER = "/users/sven/Desktop/";
 
     public static final Map<Integer, Map<Integer, Day>> YEARS = new HashMap<>();
 
