@@ -1,4 +1,4 @@
-package de.beachboys.aoc2020;
+package de.beachboys.aoc2020.Passwords;
 
 import de.beachboys.IOHelper;
 

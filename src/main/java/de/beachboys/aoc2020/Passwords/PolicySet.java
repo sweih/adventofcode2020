@@ -1,10 +1,12 @@
-package de.beachboys.aoc2020;
+package de.beachboys.aoc2020.Passwords;
 
-import java.lang.reflect.Array;
+import de.beachboys.aoc2020.Passwords.ParsedCommandLine;
+import de.beachboys.aoc2020.Passwords.PasswordPolicy;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class PolicySet implements PasswordPolicy{
+public class PolicySet implements PasswordPolicy {
 
     List<PasswordPolicy> policies;
 

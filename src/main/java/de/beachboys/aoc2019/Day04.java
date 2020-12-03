@@ -2,8 +2,11 @@ package de.beachboys.aoc2019;
 
 import de.beachboys.Day;
 import de.beachboys.Util;
+import de.beachboys.aoc2020.Passwords.PolicyComputer;
 
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Day04 extends Day {
 

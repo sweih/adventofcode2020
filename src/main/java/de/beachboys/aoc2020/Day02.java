@@ -1,11 +1,11 @@
 package de.beachboys.aoc2020;
 
 import de.beachboys.Day;
-import de.beachboys.Util;
+import de.beachboys.aoc2020.Passwords.Day2Part1Policy;
+import de.beachboys.aoc2020.Passwords.Day2Part2Policy;
+import de.beachboys.aoc2020.Passwords.PolicyComputer;
 
 import java.util.List;
-
-import static de.beachboys.aoc2020.computeMode.ODER;
 
 public class Day02 extends Day {
 
