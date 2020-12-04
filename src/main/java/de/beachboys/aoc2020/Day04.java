@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Day04 extends Day {
 
@@ -74,44 +76,36 @@ public class Day04 extends Day {
         int hitcounter = 0;
         for(Pair<String,String> passport:passports) {
             if (passport.getValue0().equals("byr")) {
-                if (isValidRange(passport.getValue1(), 1920,2002)) hitcounter++;
+                hitcounter+= isValidRange(passport.getValue1(), 1920,2002);
             }
             if (passport.getValue0().equals("iyr")) {
-                if (isValidRange(passport.getValue1(), 2010,2020)) hitcounter++;
+                hitcounter += isValidRange(passport.getValue1(), 2010,2020);
             }
             if (passport.getValue0().equals("eyr"))  {
-                if (isValidRange(passport.getValue1(), 2020,2030)) hitcounter++;
+                hitcounter += isValidRange(passport.getValue1(), 2020,2030);
             }
             if (passport.getValue0().equals("hgt"))  {
                 String height = passport.getValue1().trim();
-                if ( height.indexOf("cm") > 0) {
-                    height = height.substring(0,height.indexOf("cm") );
-                    Integer hi = Integer.parseInt(height);
-                    if ((hi >=150) && (hi<=193)) hitcounter++;
-                }
 
-                if ( height.indexOf("in") > 0) {
-                    height = height.substring(0,height.indexOf("in") );
-                    Integer hi = Integer.parseInt(height);
-                    if ((hi >=59) && (hi<=76)) hitcounter++;
-                }
+                Pattern pattern =  Pattern.compile("(\\d+)(cm|in)");
+                Matcher matcher  =  pattern.matcher(height);
+                if (!matcher.find()) continue;
+                if (matcher.groupCount() != 2) continue;
+
+                if (matcher.group(2).equalsIgnoreCase("cm"))
+                  hitcounter += this.isValidRange(matcher.group(1), 150,193);
+
+                if (matcher.group(2).equalsIgnoreCase("in"))
+                    hitcounter += this.isValidRange(matcher.group(1), 59,76);
             }
+
             if (passport.getValue0().equals("hcl")) {
                 String hairColor = passport.getValue1().trim();
                  if (hairColor.matches("#[0-9a-f]{6}")) hitcounter++;
             }
             if (passport.getValue0().equals("ecl")) {
-                String ecl = passport.getValue1().trim();
-                if (ecl.equalsIgnoreCase("amb") ||
-                        ecl.equalsIgnoreCase("blu") ||
-                        ecl.equalsIgnoreCase("brn") ||
-                        ecl.equalsIgnoreCase("gry") ||
-                        ecl.equalsIgnoreCase("grn") ||
-                        ecl.equalsIgnoreCase("hzl") ||
-                        ecl.equalsIgnoreCase("oth")
-                )
-
-                hitcounter++;
+                String ecl = passport.getValue1().trim().toLowerCase();
+                if (ecl.matches("amb|blu|brn|gry|grn|hzl|oth")) hitcounter++;
             }
             if (passport.getValue0().equalsIgnoreCase("pid")) {
                 if (passport.getValue1().trim().length() == 9) hitcounter++;
@@ -121,9 +115,12 @@ public class Day04 extends Day {
         return (hitcounter == 7);
     }
 
-    private boolean isValidRange(String value1, int min, int max) {
+    private int isValidRange(String value1, int min, int max) {
         Integer value = Integer.parseInt(value1);
-        return ((value>=min) && (value <= max));
+        if ((value>=min) && (value <= max)) {
+            return 1;
+        }
+        return 0;
     }
 
 }
