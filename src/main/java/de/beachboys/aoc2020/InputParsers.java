@@ -2,6 +2,7 @@ package de.beachboys.aoc2020;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class InputParsers {
 
@@ -18,5 +19,10 @@ public class InputParsers {
             }
             chunks.add(chunk);
             return chunks;
+    }
+
+    public static List<String> splitByEmptyLinesAndConcat(List<String> input, String delemiter) {
+        List<List<String>> tmp = splitByEmptyLines(input);
+        return tmp.stream().map(k->k.stream().collect(Collectors.joining( delemiter ))).collect(Collectors.toList());
     }
 }

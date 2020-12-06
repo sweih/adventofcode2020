@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Day04 extends Day {
 
@@ -22,70 +23,54 @@ public class Day04 extends Day {
         return parseAndCalculate(input, this::isValidPassportPart2);
     }
 
-    private String parseAndCalculate(List<String> input, Predicate<Set<Pair<String,String>>> func) {
+    private String parseAndCalculate(List<String> input, Predicate<List<List<String>>> func) {
         Integer validPassports = 0;
-        List<Set<Pair<String, String>>> passports = parsePassports(input);
-        for (Set<Pair<String,String>> passport : passports) {
+        List<List<List<String>>> passports = parsePassports(input);
+        for (List<List<String>> passport : passports) {
             if (func.test(passport)) validPassports++;
         }
         return validPassports.toString();
     }
 
 
-    private List<Set<Pair<String, String>>> parsePassports(List<String> input) {
-        Set<Pair<String,String>> passport = new HashSet<>();
-        List<Set<Pair<String,String>>> passports = new ArrayList<>();
-        for (String row: input) {
-              if (row.trim().equals("")) {
-                 passports.add(passport);
-                 passport = new HashSet<>();
-            } else {
-                List<String> line = Util.parseToList(row, " ");
-                for (String element:line) {
-                  String[] chunks = element.split(":");
-                  if (chunks.length == 2) {
-                      passport.add(new Pair<>(chunks[0].trim(), chunks[1].trim()));
-                  } else {
-                      throw new IllegalStateException("Ooops :-(");
-                  }
-                }
-            }
-        }
-        passports.add(passport);
+    private List<List<List<String>>> parsePassports(List<String> input) {
+        List<String> tmp = InputParsers.splitByEmptyLinesAndConcat(input, " ");
+        RParser rparser = new RParser("([\\w]+):([\\w|#]+)");
+        List<List<List<String>>> passports = rparser.parseToStringListMultiple( tmp,2,false);
         return passports;
     }
 
-    public boolean isValidPassportPart1(Set<Pair<String,String>> passports) {
+    public boolean isValidPassportPart1(List<List<String>> passport) {
         int hitcounter = 0;
-        for(Pair<String,String> passport:passports) {
-            if (passport.getValue0().equals("byr")) hitcounter++;
-            if (passport.getValue0().equals("iyr")) hitcounter++;
-            if (passport.getValue0().equals("eyr")) hitcounter++;
-            if (passport.getValue0().equals("hgt")) hitcounter++;
-            if (passport.getValue0().equals("hcl")) hitcounter++;
-            if (passport.getValue0().equals("ecl")) hitcounter++;
-            if (passport.getValue0().equals("pid")) hitcounter++;
-            //if (passport.getValue0().equalsIgnoreCase("cid")) hitcounter++;
+        for(List<String> ids: passport) {
+            if (ids.get(0).equals("byr")) hitcounter++;
+            if (ids.get(0).equals("iyr")) hitcounter++;
+            if (ids.get(0).equals("eyr")) hitcounter++;
+            if (ids.get(0).equals("hgt")) hitcounter++;
+            if (ids.get(0).equals("hcl")) hitcounter++;
+            if (ids.get(0).equals("ecl")) hitcounter++;
+            if (ids.get(0).equals("pid")) hitcounter++;
+            //if (passport.get(0).equalsIgnoreCase("cid")) hitcounter++;
         }
 
         return (hitcounter == 7);
     }
 
 
-    public boolean isValidPassportPart2(Set<Pair<String,String>> passports) {
+    public boolean isValidPassportPart2(List<List<String>> passportraw) {
         int hitcounter = 0;
-        for(Pair<String,String> passport:passports) {
-            if (passport.getValue0().equals("byr")) {
-                hitcounter+= isValidRange(passport.getValue1(), 1920,2002);
+        for(List<String> passport:passportraw) {
+            if (passport.get(0).equals("byr")) {
+                hitcounter+= isValidRange(passport.get(1), 1920,2002);
             }
-            if (passport.getValue0().equals("iyr")) {
-                hitcounter += isValidRange(passport.getValue1(), 2010,2020);
+            if (passport.get(0).equals("iyr")) {
+                hitcounter += isValidRange(passport.get(1), 2010,2020);
             }
-            if (passport.getValue0().equals("eyr"))  {
-                hitcounter += isValidRange(passport.getValue1(), 2020,2030);
+            if (passport.get(0).equals("eyr"))  {
+                hitcounter += isValidRange(passport.get(1), 2020,2030);
             }
-            if (passport.getValue0().equals("hgt"))  {
-                String height = passport.getValue1().trim();
+            if (passport.get(0).equals("hgt"))  {
+                String height = passport.get(1).trim();
 
                 Pattern pattern =  Pattern.compile("(\\d+)(cm|in)");
                 Matcher matcher  =  pattern.matcher(height);
@@ -99,16 +84,16 @@ public class Day04 extends Day {
                     hitcounter += this.isValidRange(matcher.group(1), 59,76);
             }
 
-            if (passport.getValue0().equals("hcl")) {
-                String hairColor = passport.getValue1().trim();
+            if (passport.get(0).equals("hcl")) {
+                String hairColor = passport.get(1).trim();
                  if (hairColor.matches("#[0-9a-f]{6}")) hitcounter++;
             }
-            if (passport.getValue0().equals("ecl")) {
-                String ecl = passport.getValue1().trim().toLowerCase();
+            if (passport.get(0).equals("ecl")) {
+                String ecl = passport.get(1).trim().toLowerCase();
                 if (ecl.matches("amb|blu|brn|gry|grn|hzl|oth")) hitcounter++;
             }
-            if (passport.getValue0().equalsIgnoreCase("pid")) {
-                if (passport.getValue1().trim().length() == 9) hitcounter++;
+            if (passport.get(0).equalsIgnoreCase("pid")) {
+                if (passport.get(1).trim().length() == 9) hitcounter++;
             }
          }
 

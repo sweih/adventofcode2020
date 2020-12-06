@@ -68,6 +68,31 @@ public class RParser {
         return result;
     }
 
+    public List<List<List<String>>> parseToStringListMultiple(List<String> input, int items, boolean throwsException) {
+        List<List<List<String>>> result = new ArrayList<>();
+
+        for (String line: input) {
+            Matcher m = this.pattern.matcher(line);
+            List<List<String>> lineMatch = new ArrayList<>();
+            while (m.find()) {
+                if (m.groupCount() == items) {
+                    List<String> ar = new ArrayList<>();
+
+                    for (int i=1; i <= items; i++) {
+                        ar.add(m.group(i));
+                    }
+
+                    lineMatch.add(ar);
+                } else {
+                    if (throwsException)
+                        throw new IllegalStateException("Wrong number of matches: Was " + m.groupCount() + " but wanted " + items);
+                }
+            }
+            result.add(lineMatch);
+        }
+        return result;
+    }
+
 
     public List<Integer[]> parseToIntegerArrayList(List<String> input, int items, boolean throwsException) {
         List<Integer[]> result = new ArrayList<>();
