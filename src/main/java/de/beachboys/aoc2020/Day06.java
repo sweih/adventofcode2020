@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Day06 extends Day {
 
@@ -18,12 +19,7 @@ public class Day06 extends Day {
     }
 
     private Integer getAnswers(List<String> answer) {
-      String checker = "";
-        for (String line : answer) {
-          checker = checker + line;
-      }
-
-        return Util.countUniqueCharacters(checker);
+        return Util.countUniqueCharacters(answer.stream().collect(Collectors.joining()));
     }
 
     public Object part2(List<String> input) {
