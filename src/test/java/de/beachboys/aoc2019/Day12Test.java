@@ -16,14 +16,20 @@ public class Day12Test extends DayTest {
 
     private static Stream<Arguments> provideTestDataForPart1() {
         return Stream.of(
-                Arguments.of(List.of("inputlines"), "part1result", null)
+                Arguments.of(List.of("<x=-8, y=-10, z=0>",
+                        "<x=5, y=5, z=10>",
+                        "<x=2, y=-7, z=3>",
+                        "<x=9, y=-8, z=-3>"), "1940", null)
 
         );
     }
 
     private static Stream<Arguments> provideTestDataForPart2() {
         return Stream.of(
-                Arguments.of(List.of("inputlines"), 2, null)
+                Arguments.of(List.of("<x=-8, y=-10, z=0>",
+                        "<x=5, y=5, z=10>",
+                        "<x=2, y=-7, z=3>",
+                        "<x=9, y=-8, z=-3>"), "4686774924", null)
 
         );
     }
