@@ -35,6 +35,7 @@ public class Day06 extends Day {
         Integer result = 50;
 
 
+
         for (String line : answer) {
             yeses = new ArrayList<>();
             for (int i=0; i< line.length(); i++) {
