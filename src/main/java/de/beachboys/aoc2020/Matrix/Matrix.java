@@ -9,15 +9,13 @@ import java.util.Set;
 
 public class Matrix {
 
-    private IOHelper io;
     public int cols = 0;
     public int rows = 0;
 
     private char[][] data;
 
-    public Matrix(List<String> input, IOHelper io) {
+    public Matrix(List<String> input) {
         this.parseInputToMatrix(input);
-        this.io = io;
     }
 
 

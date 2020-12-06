@@ -12,8 +12,8 @@ public class MatrixComputer {
     public Integer lastX = 0;
     public Integer lastY = 0;
 
-    public MatrixComputer(List<String> input, MatrixTraverser traverser, IOHelper io) {
-        this.matrix = new Matrix(input, io);
+    public MatrixComputer(List<String> input, MatrixTraverser traverser) {
+        this.matrix = new Matrix(input);
         this.setTraverser(traverser);
     }
 
