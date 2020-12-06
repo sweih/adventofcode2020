@@ -1,69 +1,82 @@
 package de.beachboys.aoc2019;
 
 import de.beachboys.Day;
-import de.beachboys.Util;
-import de.beachboys.aoc2020.Passwords.PolicyComputer;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Day04 extends Day {
 
     @Override
     public Object part1(List<String> input) {
-        List<Integer> splitInput = Util.parseToIntList(input.get(0), "-");
-        int counter = 0;
-        for (int i = splitInput.get(0); i <= splitInput.get(1); i++) {
-            int[] digits = getDigits(i);
-            if (hasAdjacentNumbers(digits) && doesNotDecrease(digits)) {
-                counter++;
-            }
+        long min = 382345;
+        long max = 843167;
+
+        long counter = 0;
+        for (long i=min;i<=max;i++) {
+          if (isValidPassword(i)) counter++;
         }
 
-        return counter;
+        return Long.toString(counter);
     }
 
-    private int[] getDigits(int i) {
-        int[] digits = new int[6];
-        int curValue = i;
-        digits[5] = curValue % 10;
-        curValue = curValue / 10;
-        digits[4] = curValue % 10;
-        curValue = curValue / 10;
-        digits[3] = curValue % 10;
-        curValue = curValue / 10;
-        digits[2] = curValue % 10;
-        curValue = curValue / 10;
-        digits[1] = curValue % 10;
-        curValue = curValue / 10;
-        digits[0] = curValue;
-        return digits;
+    public boolean isValidPassword(Long password) {
+        String pws = password.toString();
+        char[] cs = pws.toCharArray();
+        return (digetsAlwaysIncrease(cs)) && twoNumbers(cs);
+
     }
 
-    private boolean doesNotDecrease(int[] digits) {
-        return (digits[0] <= digits[1] && digits[1] <= digits[2] && digits[2] <= digits[3] && digits[3] <= digits[4] && digits[4] <= digits[5]);
+    public boolean isValidPassword2(Long password) {
+        String pws = password.toString();
+        char[] cs = pws.toCharArray();
+
+        return (digetsAlwaysIncrease(cs)  && checkPart2(cs));
+
     }
 
-    private boolean hasAdjacentNumbers(int[] digits) {
-        return (digits[0] == digits[1] || digits[1] == digits[2] || digits[2] == digits[3] || digits[3] == digits[4] || digits[4] == digits[5]);
+    private boolean twoNumbers(char[] cs) {
+        char last = '/';
+        int counter = 0;
+        for (int i=0;i<cs.length;i++) {
+            if (cs[i] == last) counter++;
+            last = cs[i];
+        }
+        return (counter > 0);
     }
 
-    private boolean hasAdjacentNumbers2(int[] digits) {
-        return (digits[0] == digits[1] && digits[1] != digits[2]|| digits[1] == digits[2] && digits[0] != digits[1]  && digits[2] != digits[3] || digits[2] == digits[3]  && digits[1] != digits[2]  && digits[3] != digits[4] || digits[3] == digits[4]  && digits[2] != digits[3]  && digits[4] != digits[5] || digits[4] == digits[5] && digits[3] != digits[4]);
+    private boolean checkPart2(char[] cs) {
+        char last = '/';
+        char lastlast = '/';
+        Integer[] repetitions = {1,1,1,1,1,1};
+
+        for (int i=1;i<cs.length;i++) {
+            if (cs[i] == cs[i-1]) repetitions[i] = 1 + repetitions[i-1];
+            if (repetitions[i] > repetitions[i-1]) repetitions[i-1] = 1;
+        }
+
+        return Arrays.stream(repetitions).anyMatch(k -> k==2);
+    }
+
+
+    private boolean digetsAlwaysIncrease(char[] cs) {
+        char last = '/';
+        for (int i=0;i<cs.length;i++) {
+          if (cs[i] < last) return false;
+          last = cs[i];
+        }
+        return true;
     }
 
     @Override
     public Object part2(List<String> input) {
-        List<Integer> splitInput = Util.parseToIntList(input.get(0), "-");
-        int counter = 0;
-        for (int i = splitInput.get(0); i <= splitInput.get(1); i++) {
-            int[] digits = getDigits(i);
-            if (hasAdjacentNumbers2(digits) && doesNotDecrease(digits)) {
-                counter++;
-            }
+        long min = 382345;
+        long max = 843167;
+
+        long counter = 0;
+        for (long i=min;i<=max;i++) {
+            if (isValidPassword2(i)) counter++;
         }
 
-        return counter;
+        return Long.toString(counter);
     }
 }
