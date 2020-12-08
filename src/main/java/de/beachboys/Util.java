@@ -61,17 +61,15 @@ public final class Util {
 
     public static List<String> splitStringBySize(String str, int size) {
         ArrayList<String> split = new ArrayList<>();
-        for (int i = 0; i <= str.length() / size; i++) {
+        for (int i = 0; i < str.length() / size; i++) {
             split.add(str.substring(i * size, Math.min((i + 1) * size, str.length())));
         }
         return split;
     }
 
     public static long countOccurences(String someString, char searchedChar, int index) {
-        if (index >= someString.length()) {
+        if (index >= someString.length())
             return 0;
-        }
-
         long count = someString.charAt(index) == searchedChar ? 1 : 0;
         return count + countOccurences(
                 someString, searchedChar, index + 1);

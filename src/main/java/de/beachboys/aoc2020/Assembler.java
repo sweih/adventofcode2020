@@ -5,14 +5,14 @@ public class Assembler {
 
     public int accumulator=0;
     int idx=0;
-    Boolean[] lineExecuted;
+    boolean[] lineExecuted;
     boolean stopSignal = false;
     boolean looped = false;
     List<String> program;
 
     public Assembler(List<String> program) {
-        this.lineExecuted = new Boolean[0];
         this.program = program;
+        this.reset();
     }
 
     public void runProgram() {
@@ -89,10 +89,7 @@ public class Assembler {
         looped = false;
         stopSignal = false;
 
-        this.lineExecuted = new Boolean[program.size()];
-        for (int i=0; i<lineExecuted.length;i++) {
-            lineExecuted[i] = false;
-        }
+        this.lineExecuted = new boolean[program.size()];
 
     }
 
