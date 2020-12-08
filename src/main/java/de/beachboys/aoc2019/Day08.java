@@ -1,12 +1,11 @@
 package de.beachboys.aoc2019;
 
 import de.beachboys.Day;
+import de.beachboys.Util;
 import org.javatuples.Triplet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Day08 extends Day {
 
@@ -14,84 +13,60 @@ public class Day08 extends Day {
     int height = 6;
 
     public Object part1(List<String> input) {
-        setImageDimensionsFromUserInput();
-        List<String> layers = getLayers(input);
-        Map<Integer, Triplet<Integer, Integer, Integer>> numbers = new HashMap<>();
-        for (int i=0; i < layers.size(); i++) {
-            String layerString = layers.get(i);
-            Triplet<Integer, Integer, Integer> counts = new Triplet<>(0,0,0);
-            for (int j=0; j <width*height; j++) {
-                switch (layerString.substring(j, j+1)) {
-                    case "0":
-                        counts = counts.setAt0(counts.getValue0()+1);
-                        break;
-                    case "1":
-                        counts = counts.setAt1(counts.getValue1()+1);
-                        break;
-                    case "2":
-                        counts = counts.setAt2(counts.getValue2()+1);
-                        break;
-                }
+        List<String> layers = Util.splitStringBySize(input.stream().collect(Collectors.joining()), width*height);
+
+        long min=1000000;
+        int minlayer = 0;
+        int counter = 0;
+        for (String layer : layers) {
+            if (layer.isBlank()) continue;;
+            long tmp = Util.countOccurences(layer, '0', 0);
+            if (tmp<min) {
+                min = tmp;
+                minlayer = counter;
             }
-            numbers.put(i, counts);
+            counter++;
         }
 
-        int selectedLayer = 0;
-        int minZeros = Integer.MAX_VALUE;
-        for (Map.Entry<Integer, Triplet<Integer, Integer, Integer>> entry : numbers.entrySet()) {
-            if (entry.getValue().getValue0() < minZeros) {
-                selectedLayer = entry.getKey();
-                minZeros = entry.getValue().getValue0();
-            }
-        }
-
-        return numbers.get(selectedLayer).getValue1() * numbers.get(selectedLayer).getValue2();
+        long res1 = Util.countOccurences(layers.get(minlayer), '1',0);
+        long res2 = Util.countOccurences(layers.get(minlayer), '2',0);
+        return Long.toString(res1 *res2);
     }
 
-    private List<String> getLayers(List<String> input) {
-        String realinput = input.get(0);
-        List<String> layers = new ArrayList<>();
-        while (!realinput.isEmpty()) {
-            layers.add(realinput.substring(0, width*height));
-            realinput = realinput.substring(width*height);
-        }
-        return layers;
-    }
 
     public Object part2(List<String> input) {
-        setImageDimensionsFromUserInput();
-        List<String> layers = getLayers(input);
+    // 0 is black, 1 is white, and 2 is transparent.
+        List<String> layers = Util.splitStringBySize(input.stream().collect(Collectors.joining()), width*height);
+        layers = layers.stream().filter(x-> !x.isBlank()).collect(Collectors.toList());;
 
-        String imageString = layers.get(0);
-        for (String layer : layers) {
-            for (int j=0; j <width*height; j++) {
-                if (imageString.charAt(j) == '2') {
-                    imageString = imageString.substring(0, j) + layer.charAt(j) + imageString.substring(j+1);
-                }
+        //layers = Lists.reverse(layers);
+        String result = layers.get(layers.size()-1);
+        for (int i= layers.size()-2; i>=1; i--) {
+              result = multiplyStrings(layers.get(i), result);
+        }
+
+        result = result.replaceAll("0", " ");
+        for (int y=0;y<height;y++) {
+            for (int x=0;x<width;x++) {
+                System.out.print(result.charAt(x+(y*width)));
             }
+            System.out.println();
         }
-
-        return formatImage(imageString);
+        return "";
     }
 
-    private void setImageDimensionsFromUserInput() {
-        String widthAsInput = io.getInput("Width (default 25):");
-        String heightAsInput = io.getInput("Height (default 6):");
-        if (!widthAsInput.isEmpty()) {
-            width = Integer.parseInt(widthAsInput);
+    public String multiplyStrings(String string1, String string2) {
+        String result = "";
+        for (int i=0; i<string1.length();i++) {
+          if (string1.charAt(i) == '2') {
+              result = result + string2.charAt(i);
+          } else {
+              result = result + string1.charAt(i);
+          }
         }
-        if (!heightAsInput.isEmpty()) {
-            height = Integer.parseInt(heightAsInput);
-        }
+        return result;
     }
 
-    private String formatImage(String imageString) {
-        StringBuilder returnValue = new StringBuilder();
-        for (int i = 0; i < height; i++) {
-            returnValue.append(imageString, i*width, (i+1)*width);
-            returnValue.append("\n");
-        }
-        return returnValue.toString();
-    }
+
 
 }

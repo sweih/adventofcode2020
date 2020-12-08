@@ -7,11 +7,16 @@ import java.util.List;
 public class Day08 extends Day {
 
     public Object part1(List<String> input) {
-        return "part1result";
+        Assembler ass = new Assembler(input);
+        ass.runProgram();
+        return Integer.toString(ass.accumulator);
     }
 
     public Object part2(List<String> input) {
-        return 2;
+        Assembler ass = new Assembler(input);
+        ass.fixProgram();
+        ass.runProgram();
+        return Integer.toString(ass.accumulator);
     }
 
 }

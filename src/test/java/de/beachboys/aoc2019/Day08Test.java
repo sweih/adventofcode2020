@@ -17,8 +17,7 @@ public class Day08Test extends DayTest {
 
     private static Stream<Arguments> provideTestDataForPart1() {
         return Stream.of(
-                Arguments.of(List.of("123456789012"), 1, new IOHelperForTests(List.of("3", "2"), List.of()))
-
+                Arguments.of(List.of("123456789012"), 8, new IOHelperForTests(List.of("3", "2"), List.of()))
         );
     }
 
