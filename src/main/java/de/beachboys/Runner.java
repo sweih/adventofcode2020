@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class Runner {
 
     private static int CURRENT_YEAR = 2020;
-    private static int CURRENT_DAY = 8;
+    private static int CURRENT_DAY = 9;
     private static int CURRENT_PART = 2;
     // use the session id from your browser session (long hex string)
     private static String BROWSER_SESSION = "53616c7465645f5f26c9cd0c2600dc7a24b1e4497065a8e0eee1a575579807bf064adcdc67b39f29c60d0e82965269ce";

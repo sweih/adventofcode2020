@@ -1,9 +1,9 @@
 package de.beachboys;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import org.javatuples.Pair;
+
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class Util {
@@ -50,8 +50,8 @@ public final class Util {
         }
 
         int count = 0;
-        for (int i = 0; i < isItThere.length; i++) {
-            if (isItThere[i] == true){
+        for (boolean b : isItThere) {
+            if (b) {
                 count++;
             }
         }
@@ -67,12 +67,88 @@ public final class Util {
         return split;
     }
 
-    public static long countOccurences(String someString, char searchedChar, int index) {
+    public static long countOccurrences(String someString, char searchedChar, int index) {
         if (index >= someString.length())
             return 0;
         long count = someString.charAt(index) == searchedChar ? 1 : 0;
-        return count + countOccurences(
+        return count + countOccurrences(
                 someString, searchedChar, index + 1);
     }
 
+
+    public static String paintMap(Map<Pair<Integer, Integer>, String> map) {
+        Map<String, String> valuesToPaint = map.values().stream().distinct().collect(Collectors.toMap(Function.identity(), Function.identity()));
+        return paintMap(map, valuesToPaint);
+    }
+
+    public static String paintMap(Map<Pair<Integer, Integer>, String> map, Map<String, String> valuesToPaint) {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        for (Pair<Integer, Integer> point : map.keySet()) {
+            minX = Math.min(minX, point.getValue0());
+            minY = Math.min(minY, point.getValue1());
+            maxX = Math.max(maxX, point.getValue0());
+            maxY = Math.max(maxY, point.getValue1());
+        }
+        int width = maxX - minX + 1;
+        int height = maxY - minY + 1;
+        StringBuilder imageString = new StringBuilder();
+        imageString.append(" ".repeat(width*height));
+        for (Pair<Integer, Integer> point : map.keySet()) {
+            int index = width * (point.getValue1() - minY) + (point.getValue0() - minX);
+            imageString.replace(index, index + 1, map.get(point));
+        }
+        return formatImage(imageString.toString(), width, height, valuesToPaint);
+    }
+
+    public static String formatImage(String imageString, int width, int height, Map<String, String> valuesToPaint) {
+        final StringBuilder newImageString = new StringBuilder();
+        if (valuesToPaint != null) {
+            imageString.chars()
+                    .forEach(i -> {
+                        String charAsString = String.valueOf((char) i);
+                        newImageString.append(valuesToPaint.getOrDefault(charAsString, " "));
+                    });
+        } else {
+            newImageString.append(imageString);
+        }
+        return formatImage(newImageString.toString(), width, height);
+    }
+
+    public static String formatImage(String imageString, int width, int height) {
+        StringBuilder returnValue = new StringBuilder();
+        for (int i = 0; i < height; i++) {
+            returnValue.append(imageString, i*width, (i+1)*width);
+            returnValue.append("\n");
+        }
+        return returnValue.toString();
+    }
+
+    public static Map<Pair<Integer, Integer>, String> buildImageMap(String imageWithLineBreaks) {
+        return buildImageMap(parseToList(imageWithLineBreaks, "\n"));
+    }
+
+    public static Map<Pair<Integer, Integer>, String> buildImageMap(List<String> imageLines) {
+        Map<Pair<Integer, Integer>, String> map = new HashMap<>();
+        for (int j = 0; j < imageLines.size(); j++) {
+            String line = imageLines.get(j);
+            for (int i = 0; i < line.length(); i++) {
+                map.put(Pair.with(i, j), line.substring(i, i + 1));
+            }
+        }
+        return map;
+    }
+
+    public static List<Long> rangeOf(List<Long> list, int start, int end) {
+        List<Long> result = new ArrayList<>();
+        for (int i=start; i<=end; i++) {
+            result.add(list.get(i));
+        }
+        return result;
+    }
+
+
 }
+
