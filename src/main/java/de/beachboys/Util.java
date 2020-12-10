@@ -149,6 +149,14 @@ public final class Util {
         return result;
     }
 
+    public static List<Integer> rangeOfInt(List<Integer> list, int start, int end) {
+        List<Integer> result = new ArrayList<>();
+        for (int i=start; i<=end; i++) {
+            result.add(list.get(i));
+        }
+        return result;
+    }
+
 
 }
 
