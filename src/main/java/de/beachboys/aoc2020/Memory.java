@@ -88,7 +88,7 @@ public class Memory {
     public int countAppearance(int search) {
         int counter = 0;
         for (int i=0;i<this.size;i++) {
-            if (memory[i] == search) counter++;
+            if (memory[i] == search ) counter++;
         }
         return counter;
     }
@@ -103,5 +103,7 @@ public class Memory {
             idx++;
         }
     }
+
+
 
 }
