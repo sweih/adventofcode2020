@@ -5,6 +5,8 @@ import de.beachboys.aoc2020.Matrix.Matrix;
 
 import java.util.List;
 
+
+
 public class Day11 extends Day {
 
     Matrix m;
@@ -13,7 +15,7 @@ public class Day11 extends Day {
     public Object part1(List<String> input) {
         this.m = new Matrix(input, '.');
         this.w = m.copy();
-        
+
         boolean equals = false;
         while (!equals) {
             for (int i = 1; i < m.rows-1; i++) {
@@ -25,8 +27,6 @@ public class Day11 extends Day {
             this.m = w.copy();
         }
         int i = this.m.countChars('#');
-
-        this.m.print();
         return Integer.toString(i);
     }
 
@@ -73,7 +73,53 @@ public class Day11 extends Day {
 
     public Object part2(List<String> input) {
         // implementation of part2 is embarassing. do commit after refactoring.
-        return "2066";
+        this.m = new Matrix(input);
+        this.w = m.copy();
+        int counter = 0;
+        boolean equals = false;
+        int offset = 5;
+        while (!equals) {
+
+            for (int i = 0; i < m.rows; i++) {
+                for (int j = 0; j < m.cols; j++) {
+                    if (m.getCharAt(j, i) == '.') {
+                        continue;
+                    }
+                    int res = 0;
+                    for (int x = -1; x <= 1; x++) {
+                        for (int y = -1; y <= 1; y++) {
+                            boolean occupied = false;
+                            if ((x == 0) && (y == 0)) {
+                                continue;
+                            }
+                            for (int o = 1; o <= offset; o++) {
+
+                                int checkX = j + x * o;
+                                int checkY = i + y * o;
+
+                                if ((checkX < 0) || (checkY < 0) || (checkX >= m.cols) || (checkY >= m.rows)) {
+                                    continue;
+                                }
+                                if (m.getCharAt(checkX, checkY) == '#') occupied = true;
+                                if (m.getCharAt(checkX, checkY) == 'L') break;
+
+                            }
+                            if (occupied) res++;
+                        }
+                    }
+                    if (m.getCharAt(j,i) == 'L') {
+                      if (res==0) w.setCharAt(j,i, '#');
+                    } else if (m.getCharAt(j,i) == '#') {
+                        if (res>=offset) w.setCharAt(j,i, 'L');
+                    }
+                }
+            }
+            equals = this.m.equals(this.w);
+            this.m = w.copy();
+            counter++;
+        }
+        int c = this.m.countChars('#');
+        return Integer.toString(c);
     }
 
 
